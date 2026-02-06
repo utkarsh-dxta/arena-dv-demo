@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import api from '../../services/api';
+import useDataLayer from '../../hooks/useDataLayer';
+import Moengage from '@moengage/web-sdk';
 import './ProductDetail.css';
 
 const ProductDetail = () => {
@@ -13,6 +15,8 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
+  
+  const { trackProductDetail } = useDataLayer();
 
   // Helper to get normalized product field
   const getProductField = (prod, field) => {
@@ -70,6 +74,29 @@ const ProductDetail = () => {
 
     fetchProduct();
   }, [id]);
+
+  // Track product view when product data is loaded
+  useEffect(() => {
+    if (product && !loading) {
+      const productId = getProductField(product, 'id');
+      const productName = getProductField(product, 'name');
+      const productPrice = parseFloat(getProductField(product, 'price')) || 0;
+      const productCategory = getProductField(product, 'category');
+      const productBrand = product.Product_Brand || product.brand || 'NexTel';
+
+      // Track with Tealium Data Layer
+      trackProductDetail(product);
+
+      // Track with MoEngage
+      Moengage.track_event("Product Viewed", {
+        "product_id": productId,
+        "product_name": productName,
+        "price": productPrice,
+        "category": productCategory,
+        "brand": productBrand
+      });
+    }
+  }, [product, loading]);
 
   const handleAddToCart = () => {
     if (!product) return;
