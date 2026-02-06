@@ -1,0 +1,327 @@
+.products-page {
+  min-height: 100vh;
+  padding-top: 80px;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1.5rem;
+  color: var(--text-muted);
+}
+
+.loader {
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+
+.loader-ring {
+  position: absolute;
+  inset: 0;
+  border: 3px solid transparent;
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite;
+}
+
+.loader-ring:nth-child(2) {
+  inset: 6px;
+  border-top-color: var(--accent-secondary);
+  animation-duration: 1.2s;
+  animation-direction: reverse;
+}
+
+.loader-ring:nth-child(3) {
+  inset: 12px;
+  border-top-color: #00aaff;
+  animation-duration: 0.9s;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.products-header {
+  position: relative;
+  padding: 4rem 2rem;
+  text-align: center;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(0, 255, 170, 0.03), transparent);
+}
+
+.header-content {
+  position: relative;
+  z-index: 1;
+}
+
+.products-header h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.products-header p {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+.header-bg-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(0, 255, 170, 0.08), transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(0, 153, 255, 0.06), transparent 50%);
+  pointer-events: none;
+}
+
+.products-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 2rem;
+}
+
+.products-sidebar {
+  position: sticky;
+  top: 100px;
+  height: fit-content;
+}
+
+.filter-section {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.filter-section h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 1rem;
+}
+
+.filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filter-option {
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-option:hover {
+  background: rgba(0, 255, 170, 0.05);
+  color: var(--text-primary);
+}
+
+.filter-option.active {
+  background: rgba(0, 255, 170, 0.1);
+  border-color: rgba(0, 255, 170, 0.3);
+  color: var(--accent-primary);
+}
+
+.clear-filters {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.875rem;
+  background: rgba(255, 59, 48, 0.1);
+  border: 1px solid rgba(255, 59, 48, 0.2);
+  border-radius: 10px;
+  color: #ff6b6b;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clear-filters svg {
+  width: 16px;
+  height: 16px;
+}
+
+.clear-filters:hover {
+  background: rgba(255, 59, 48, 0.15);
+}
+
+.products-main {
+  min-height: 60vh;
+}
+
+.products-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.results-count {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.search-term {
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.results-count span:last-child {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.sort-control {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sort-control label {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.sort-control select {
+  padding: 0.625rem 2rem 0.625rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+}
+
+.sort-control select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.no-products {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.no-products svg {
+  width: 80px;
+  height: 80px;
+  color: var(--text-muted);
+  opacity: 0.5;
+  margin-bottom: 1.5rem;
+}
+
+.no-products h3 {
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.no-products p {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.btn-reset {
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-reset:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 255, 170, 0.3);
+}
+
+@media (max-width: 968px) {
+  .products-container {
+    grid-template-columns: 1fr;
+  }
+
+  .products-sidebar {
+    position: static;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .filter-section {
+    flex: 1;
+    min-width: 250px;
+    margin-bottom: 0;
+  }
+
+  .clear-filters {
+    width: auto;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .products-container {
+    padding: 1rem;
+  }
+
+  .products-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-options {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .filter-option {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
