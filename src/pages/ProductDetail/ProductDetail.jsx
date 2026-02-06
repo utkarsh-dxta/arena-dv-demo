@@ -40,12 +40,30 @@ const ProductDetail = () => {
     return '';
   };
 
+  // Store category name for tracking
+  const [categoryName, setCategoryName] = useState('');
+
   useEffect(() => {
     const fetchProduct = async () => {
       setLoading(true);
       try {
-        const productsRes = await api.getProducts();
+        // Fetch both products and categories
+        const [productsRes, categoriesRes] = await Promise.all([
+          api.getProducts(),
+          api.getCategories()
+        ]);
         const allProducts = productsRes.products || productsRes || [];
+        const allCategories = Array.isArray(categoriesRes) ? categoriesRes : [];
+        
+        // Build category ID to Name lookup
+        const categoryIdToName = {};
+        allCategories.forEach(cat => {
+          const catId = cat.Category_Id || cat.id || '';
+          const catName = cat.Category_Name || cat.name || '';
+          if (catId && catName) {
+            categoryIdToName[catId] = catName;
+          }
+        });
         
         // Find the product by ID
         const foundProduct = allProducts.find(p => {
@@ -56,12 +74,16 @@ const ProductDetail = () => {
         if (foundProduct) {
           setProduct(foundProduct);
           
+          // Get category name from Category_Id
+          const catId = foundProduct.Category_Id || foundProduct.category_id || '';
+          const resolvedCategoryName = categoryIdToName[catId] || catId;
+          setCategoryName(resolvedCategoryName);
+          
           // Get related products from same category
-          const category = getProductField(foundProduct, 'category');
           const related = allProducts.filter(p => {
-            const pCategory = getProductField(p, 'category');
+            const pCatId = p.Category_Id || p.category_id || '';
             const pId = getProductField(p, 'id');
-            return pCategory === category && String(pId) !== String(id);
+            return pCatId === catId && String(pId) !== String(id);
           }).slice(0, 4);
           setRelatedProducts(related);
         }
@@ -77,11 +99,10 @@ const ProductDetail = () => {
 
   // Track product view when product data is loaded
   useEffect(() => {
-    if (product && !loading) {
+    if (product && !loading && categoryName) {
       const productId = getProductField(product, 'id');
       const productName = getProductField(product, 'name');
       const productPrice = parseFloat(getProductField(product, 'price')) || 0;
-      const productCategory = getProductField(product, 'category');
       const productBrand = product.Product_Brand || product.brand || 'NexTel';
 
       // Track with Tealium Data Layer
@@ -92,11 +113,11 @@ const ProductDetail = () => {
         "product_id": productId,
         "product_name": productName,
         "price": productPrice,
-        "category": productCategory,
+        "category": categoryName,
         "brand": productBrand
       });
     }
-  }, [product, loading]);
+  }, [product, loading, categoryName]);
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -157,7 +178,6 @@ const ProductDetail = () => {
   const productPrice = parseFloat(getProductField(product, 'price')) || 0;
   const productOriginalPrice = getProductField(product, 'originalPrice');
   const productImage = getProductField(product, 'detailImage') || getProductField(product, 'image');
-  const productCategory = getProductField(product, 'category');
   const productFeatures = getProductField(product, 'features');
 
   return (
@@ -168,11 +188,11 @@ const ProductDetail = () => {
           <Link to="/">Home</Link>
           <span className="separator">/</span>
           <Link to="/products">Products</Link>
-          {productCategory && (
+          {categoryName && (
             <>
               <span className="separator">/</span>
-              <Link to={`/products?category=${encodeURIComponent(productCategory)}`}>
-                {productCategory}
+              <Link to={`/products?category=${encodeURIComponent(categoryName)}`}>
+                {categoryName}
               </Link>
             </>
           )}
@@ -200,8 +220,8 @@ const ProductDetail = () => {
 
           {/* Product Info */}
           <div className="pdp-info">
-            {productCategory && (
-              <span className="product-category">{productCategory}</span>
+            {categoryName && (
+              <span className="product-category">{categoryName}</span>
             )}
             <h1 className="product-title">{productName}</h1>
             
