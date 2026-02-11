@@ -126,15 +126,16 @@ const api = {
       const data = await response.json();
       
       // Check if API returned valid response
-      if (data.value || data.user || data.success || data.valid) {
+      // API returns: {status: 200, user_name: "...", user_id: "..."}
+      if (data.value || data.user || data.success || data.valid || data.status === 200 || data.user_id) {
         const user = data.value?.[0] || data.user || data;
         return {
           success: true,
           user: {
-            id: user.User_Id || user.id || credentials.email,
-            name: user.User_Name || user.name || credentials.email.split('@')[0],
-            email: user.User_Email || user.email || credentials.email,
-            phone: user.User_Phone || user.phone || '',
+            id: user.User_Id || user.user_id || user.id || credentials.email,
+            name: user.User_Name || user.user_name || user.name || credentials.email.split('@')[0],
+            email: user.User_Email || user.user_email || user.email || credentials.email,
+            phone: user.User_Phone || user.user_phone || user.phone || '',
           }
         };
       }
