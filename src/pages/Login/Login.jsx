@@ -30,7 +30,7 @@ const Login = () => {
     try {
       const response = await api.validateUser({ email, password });
       
-      if (response.success || response.user || response.valid) {
+      if (response.success || response.user || response.status === 200) {
         const userData = response.user || { email, id: response.userId || Date.now() };
         login(userData);
         trackLoginSuccess(userData, 'email');
