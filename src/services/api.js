@@ -115,15 +115,14 @@ const api = {
 
   async validateUser(credentials) {
     try {
-      // Try the API first
-      const response = await fetch(`${CONFIG.BASE_URL}${CONFIG.VALIDATE_USER}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(credentials),
+      // Build URL with query string parameters (GET request to avoid CORS preflight)
+      const params = new URLSearchParams({
+        email: credentials.email,
+        password: credentials.password
       });
+      const url = `${CONFIG.BASE_URL}${CONFIG.VALIDATE_USER}?${params.toString()}`;
       
+      const response = await fetch(url);
       const data = await response.json();
       
       // Check if API returned valid response
