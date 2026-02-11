@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import api from '../../services/api';
 import useDataLayer from '../../hooks/useDataLayer';
-import Moengage from '@moengage/web-sdk';
+// import Moengage from '@moengage/web-sdk'; // Commented out for now
 import './ProductDetail.css';
 
 const ProductDetail = () => {
@@ -108,14 +108,14 @@ const ProductDetail = () => {
       // Track with Tealium Data Layer
       trackProductDetail(product);
 
-      // Track with MoEngage
-      Moengage.track_event("Product Viewed", {
-        "product_id": productId,
-        "product_name": productName,
-        "price": productPrice,
-        "category": categoryName,
-        "brand": productBrand
-      });
+      // MoEngage tracking - Commented out for now
+      // Moengage.track_event("Product Viewed", {
+      //   "product_id": productId,
+      //   "product_name": productName,
+      //   "price": productPrice,
+      //   "category": categoryName,
+      //   "brand": productBrand
+      // });
     }
   }, [product, loading, categoryName]);
 
