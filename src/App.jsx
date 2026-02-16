@@ -4,12 +4,15 @@ import { CartProvider } from './context/CartContext';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import Cart from './components/Cart/Cart';
+import Chatbot from './components/Chatbot/Chatbot';
 import Home from './pages/Home/Home';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import Products from './pages/Products/Products';
 import ProductDetail from './pages/ProductDetail/ProductDetail';
 import Plans from './pages/Plans/Plans';
+import Upgrades from './pages/Upgrades/Upgrades';
+import FAQ from './pages/FAQ/FAQ';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Checkout from './pages/Checkout/Checkout';
 import './App.css';
@@ -46,6 +49,8 @@ function AppContent() {
             <Route path="/products" element={<Products />} />
             <Route path="/products/:id" element={<ProductDetail />} />
             <Route path="/plans" element={<Plans />} />
+            <Route path="/upgrades" element={<Upgrades />} />
+            <Route path="/faq" element={<FAQ />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route 
               path="/dashboard" 
@@ -67,6 +72,7 @@ function AppContent() {
           </Routes>
         </main>
         <Footer />
+        <Chatbot />
       </div>
     </Router>
   );

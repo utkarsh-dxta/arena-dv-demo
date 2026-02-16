@@ -148,6 +148,65 @@ const useDataLayer = () => {
     DataLayer.trackPlanSelected(plan, user);
   }, [user]);
 
+  // Upgrades page tracking
+  const trackUpgradesPage = useCallback(() => {
+    DataLayer.viewUpgradesPage(user);
+  }, [user]);
+
+  const trackUpgradeSelected = useCallback((upgrade) => {
+    DataLayer.trackUpgradeSelected(upgrade, user);
+  }, [user]);
+
+  const trackUpgradeComparison = useCallback((currentPlan, upgradePlan) => {
+    DataLayer.trackUpgradeComparison(currentPlan, upgradePlan, user);
+  }, [user]);
+
+  const trackUpgradeCtaClick = useCallback((ctaName, upgradeName) => {
+    DataLayer.trackUpgradeCtaClick(ctaName, upgradeName, user);
+  }, [user]);
+
+  // FAQ page tracking
+  const trackFaqPage = useCallback(() => {
+    DataLayer.viewFaqPage(user);
+  }, [user]);
+
+  const trackFaqExpanded = useCallback((faqQuestion, faqCategory) => {
+    DataLayer.trackFaqExpanded(faqQuestion, faqCategory, user);
+  }, [user]);
+
+  const trackFaqCategoryFilter = useCallback((category) => {
+    DataLayer.trackFaqCategoryFilter(category, user);
+  }, [user]);
+
+  const trackSupportFormSubmit = useCallback((formData) => {
+    DataLayer.trackSupportFormSubmit(formData, user);
+  }, [user]);
+
+  const trackSupportFormInteraction = useCallback((fieldName) => {
+    DataLayer.trackSupportFormInteraction(fieldName, user);
+  }, [user]);
+
+  // Chatbot tracking
+  const trackChatbotOpened = useCallback(() => {
+    DataLayer.trackChatbotOpened(user);
+  }, [user]);
+
+  const trackChatbotClosed = useCallback(() => {
+    DataLayer.trackChatbotClosed(user);
+  }, [user]);
+
+  const trackChatbotOptionSelected = useCallback((optionText, optionId, depth) => {
+    DataLayer.trackChatbotOptionSelected(optionText, optionId, depth, user);
+  }, [user]);
+
+  const trackChatbotPath = useCallback((path) => {
+    DataLayer.trackChatbotPath(path, user);
+  }, [user]);
+
+  const trackChatbotRestart = useCallback(() => {
+    DataLayer.trackChatbotRestart(user);
+  }, [user]);
+
   // Generic event tracker
   const trackEvent = useCallback((eventData) => {
     DataLayer.trackEvent(eventData, user);
@@ -172,6 +231,8 @@ const useDataLayer = () => {
     trackDashboardPage,
     trackPlansPage,
     trackSearchResults,
+    trackUpgradesPage,
+    trackFaqPage,
     
     // Event tracking methods
     trackAddToCart,
@@ -194,6 +255,18 @@ const useDataLayer = () => {
     trackNavClick,
     trackError,
     trackPlanSelected,
+    trackUpgradeSelected,
+    trackUpgradeComparison,
+    trackUpgradeCtaClick,
+    trackFaqExpanded,
+    trackFaqCategoryFilter,
+    trackSupportFormSubmit,
+    trackSupportFormInteraction,
+    trackChatbotOpened,
+    trackChatbotClosed,
+    trackChatbotOptionSelected,
+    trackChatbotPath,
+    trackChatbotRestart,
     trackEvent,
   };
 };

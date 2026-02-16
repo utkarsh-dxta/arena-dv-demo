@@ -54,7 +54,7 @@ const Footer = () => {
               <ul>
                 <li><Link to="/products">All Products</Link></li>
                 <li><Link to="/plans">Mobile Plans</Link></li>
-                <li><Link to="/products?category=devices">Devices</Link></li>
+                <li><Link to="/upgrades">Upgrades</Link></li>
                 <li><Link to="/products?category=accessories">Accessories</Link></li>
               </ul>
             </div>
@@ -72,8 +72,8 @@ const Footer = () => {
             <div className="links-column">
               <h4>Support</h4>
               <ul>
-                <li><a href="#">Help Center</a></li>
-                <li><a href="#">Contact Us</a></li>
+                <li><Link to="/faq">FAQ / Help Center</Link></li>
+                <li><Link to="/faq#support-form">Contact Us</Link></li>
                 <li><a href="#">Coverage Map</a></li>
                 <li><a href="#">Find a Store</a></li>
               </ul>

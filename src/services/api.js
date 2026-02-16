@@ -40,36 +40,56 @@ const api = {
   },
 
   async createOrder(orderData) {
-    const orderId = `ORD-${Date.now()}`;
+    const orderId = new Date().getTime();
+    
+    // Build payload matching the API's expected format
+    const payload = {
+      order_id: orderId,
+      user_id: orderData.customerInfo?.email || orderData.userId,
+      products: (orderData.items || []).map(item => ({
+        prod_id: item.Product_Id || item.id || item.product_id,
+        prod_price: item.Product_Price || item.price || item.product_price,
+      })),
+    };
+
+    // If user is not authenticated, include user details in payload
+    if (!orderData.isAuthenticated) {
+      payload.user_name = orderData.customerInfo?.name;
+      payload.user_email = orderData.customerInfo?.email;
+    }
+
+    console.log('[createOrder] Payload:', payload);
+
     const order = {
       ...orderData,
-      Order_Id: orderId,
+      Order_Id: String(orderId),
       Order_Date: new Date().toISOString(),
       Order_Status: 'Confirmed',
     };
 
     try {
-      const response = await fetch(`${CONFIG.BASE_URL}${CONFIG.CREATE_ORDER}`, {
+      await fetch(`${CONFIG.BASE_URL}${CONFIG.CREATE_ORDER}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(orderData),
+        body: JSON.stringify(payload),
+        mode: 'no-cors',
+        redirect: 'follow',
       });
       
-      const data = await response.json();
-      
-      // Save order locally regardless of API response
+      // mode: 'no-cors' returns opaque response, so we can't read it
+      // Save order locally and treat as success
       this._saveOrderLocally(order);
       
-      return { success: true, orderId: data.orderId || orderId, order };
+      return { success: true, orderId: String(orderId), order };
     } catch (error) {
       console.error('Error creating order (using local fallback):', error);
       
       // Save order locally for demo purposes
       this._saveOrderLocally(order);
       
-      return { success: true, orderId, order };
+      return { success: true, orderId: String(orderId), order };
     }
   },
 
@@ -186,66 +206,48 @@ const api = {
 
   async registerUser(userData) {
     try {
-      // Try the API first
+      // Try the API first — payload matches API's expected format
+      const raw = JSON.stringify({
+        email: userData.email,
+        password: userData.password,
+        user_name: userData.name,
+      });
+
       const response = await fetch(`${CONFIG.BASE_URL}${CONFIG.REGISTER_USER}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'text/plain',
         },
-        body: JSON.stringify({
-          email: userData.email,
-          password: userData.password,
-          name: userData.name,
-          phone: userData.phone,
-        }),
+        body: raw,
+        redirect: 'follow',
       });
       
       const data = await response.json();
       
-      // Check if API registration was successful
-      if (data.success || data.user || data.User_Id || (data.status && data.status === 200)) {
+      // Check if API registration was successful (status 200)
+      if (data.status === 200 || data.success || data.user || data.User_Id) {
         const user = data.user || data;
         return {
           success: true,
           user: {
-            id: user.User_Id || user.id || `user_${Date.now()}`,
-            name: user.User_Name || user.name || userData.name,
-            email: user.User_Email || user.email || userData.email,
-            phone: user.User_Phone || user.phone || userData.phone,
+            id: user.User_Id || user.user_id || user.id || `user_${Date.now()}`,
+            name: user.User_Name || user.user_name || user.name || userData.name,
+            email: user.User_Email || user.user_email || user.email || userData.email,
+            phone: user.User_Phone || user.user_phone || user.phone || userData.phone,
           }
         };
       }
       
-      // If API fails, store user locally for demo purposes
-      const registeredUsers = JSON.parse(localStorage.getItem('telecom_registered_users') || '[]');
-      
-      // Check if email already exists
-      if (registeredUsers.some(u => u.email === userData.email)) {
-        return { success: false, message: 'Email already registered' };
+      // Status 301 = server exception
+      if (data.status === 301) {
+        return { success: false, message: CONFIG.exceptionError };
       }
       
-      const newUser = {
-        id: `user_${Date.now()}`,
-        name: userData.name,
-        email: userData.email,
-        phone: userData.phone,
-        password: userData.password, // In a real app, this would be hashed
-      };
+      // Other status = email already exists
+      return { success: false, message: 'Email already registered. Please use a different email.' };
       
-      registeredUsers.push(newUser);
-      localStorage.setItem('telecom_registered_users', JSON.stringify(registeredUsers));
-      
-      return {
-        success: true,
-        user: {
-          id: newUser.id,
-          name: newUser.name,
-          email: newUser.email,
-          phone: newUser.phone,
-        }
-      };
     } catch (error) {
-      console.error('Error registering user:', error);
+      console.error('Error registering user (API):', error);
       
       // Fallback to local storage for demo purposes
       const registeredUsers = JSON.parse(localStorage.getItem('telecom_registered_users') || '[]');

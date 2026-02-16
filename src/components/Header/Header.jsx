@@ -35,6 +35,8 @@ const Header = () => {
           <Link to="/" className="nav-link" onClick={() => setMobileMenuOpen(false)}>Home</Link>
           <Link to="/products" className="nav-link" onClick={() => setMobileMenuOpen(false)}>Products</Link>
           <Link to="/plans" className="nav-link" onClick={() => setMobileMenuOpen(false)}>Plans</Link>
+          <Link to="/upgrades" className="nav-link" onClick={() => setMobileMenuOpen(false)}>Upgrades</Link>
+          <Link to="/faq" className="nav-link" onClick={() => setMobileMenuOpen(false)}>FAQ</Link>
           {isAuthenticated && (
             <Link to="/dashboard" className="nav-link" onClick={() => setMobileMenuOpen(false)}>Dashboard</Link>
           )}

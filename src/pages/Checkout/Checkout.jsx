@@ -63,6 +63,7 @@ const Checkout = () => {
     try {
       const orderData = {
         userId: user?.id || user?.email,
+        isAuthenticated: !!user?.id,
         items: cartItems,
         total: cartTotal,
         shippingAddress: {

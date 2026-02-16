@@ -582,6 +582,208 @@ const DataLayer = {
       plan_type: plan.type || plan.Plan_Type || '',
     }, user);
   },
+
+  // ============================================
+  // UPGRADES PAGE EVENTS
+  // ============================================
+
+  /**
+   * Upgrades page view
+   */
+  viewUpgradesPage(user = null) {
+    return this.setPageView({
+      page_name: 'upgrades',
+      page_type: 'upgrades_listing',
+      page_category: 'upgrades',
+      site_section: 'upgrades',
+    }, user);
+  },
+
+  /**
+   * Upgrade selected event
+   */
+  trackUpgradeSelected(upgrade, user = null) {
+    return this.trackEvent({
+      tealium_event: 'upgrade_select',
+      event_category: 'upgrades',
+      event_action: 'upgrade_selected',
+      event_label: upgrade.name || '',
+      upgrade_name: upgrade.name || '',
+      upgrade_price: String(upgrade.price || '0'),
+      upgrade_type: upgrade.type || '',
+      upgrade_category: upgrade.category || '',
+    }, user);
+  },
+
+  /**
+   * Upgrade comparison event
+   */
+  trackUpgradeComparison(currentPlan, upgradePlan, user = null) {
+    return this.trackEvent({
+      tealium_event: 'upgrade_compare',
+      event_category: 'upgrades',
+      event_action: 'upgrade_comparison',
+      event_label: `${currentPlan} vs ${upgradePlan}`,
+      current_plan: currentPlan,
+      upgrade_plan: upgradePlan,
+    }, user);
+  },
+
+  /**
+   * Upgrade CTA click
+   */
+  trackUpgradeCtaClick(ctaName, upgradeName, user = null) {
+    return this.trackEvent({
+      tealium_event: 'upgrade_cta_click',
+      event_category: 'upgrades',
+      event_action: 'upgrade_cta_click',
+      event_label: ctaName,
+      cta_name: ctaName,
+      upgrade_name: upgradeName,
+    }, user);
+  },
+
+  // ============================================
+  // FAQ PAGE EVENTS
+  // ============================================
+
+  /**
+   * FAQ page view
+   */
+  viewFaqPage(user = null) {
+    return this.setPageView({
+      page_name: 'faq',
+      page_type: 'faq',
+      page_category: 'support',
+      site_section: 'support',
+    }, user);
+  },
+
+  /**
+   * FAQ item expanded event
+   */
+  trackFaqExpanded(faqQuestion, faqCategory, user = null) {
+    return this.trackEvent({
+      tealium_event: 'faq_expand',
+      event_category: 'support',
+      event_action: 'faq_expanded',
+      event_label: faqQuestion,
+      faq_question: faqQuestion,
+      faq_category: faqCategory,
+    }, user);
+  },
+
+  /**
+   * FAQ category filter event
+   */
+  trackFaqCategoryFilter(category, user = null) {
+    return this.trackEvent({
+      tealium_event: 'faq_filter',
+      event_category: 'support',
+      event_action: 'faq_category_filter',
+      event_label: category,
+      faq_category: category,
+    }, user);
+  },
+
+  /**
+   * Support form submission event
+   */
+  trackSupportFormSubmit(formData, user = null) {
+    return this.trackEvent({
+      tealium_event: 'support_form_submit',
+      event_category: 'support',
+      event_action: 'support_form_submitted',
+      event_label: formData.subject || formData.category || '',
+      form_category: formData.category || '',
+      form_subject: formData.subject || '',
+      form_name: formData.name || '',
+      form_email: formData.email || '',
+      ticket_id: formData.ticketId || '',
+    }, user);
+  },
+
+  /**
+   * Support form field interaction
+   */
+  trackSupportFormInteraction(fieldName, user = null) {
+    return this.trackEvent({
+      tealium_event: 'support_form_interaction',
+      event_category: 'support',
+      event_action: 'form_field_interaction',
+      event_label: fieldName,
+      form_field: fieldName,
+    }, user);
+  },
+
+  // ============================================
+  // CHATBOT EVENTS
+  // ============================================
+
+  /**
+   * Chatbot opened event
+   */
+  trackChatbotOpened(user = null) {
+    return this.trackEvent({
+      tealium_event: 'chatbot_open',
+      event_category: 'chatbot',
+      event_action: 'chatbot_opened',
+      event_label: 'chatbot_widget',
+    }, user);
+  },
+
+  /**
+   * Chatbot closed event
+   */
+  trackChatbotClosed(user = null) {
+    return this.trackEvent({
+      tealium_event: 'chatbot_close',
+      event_category: 'chatbot',
+      event_action: 'chatbot_closed',
+      event_label: 'chatbot_widget',
+    }, user);
+  },
+
+  /**
+   * Chatbot option selected (IVR-style)
+   */
+  trackChatbotOptionSelected(optionText, optionId, depth, user = null) {
+    return this.trackEvent({
+      tealium_event: 'chatbot_option_select',
+      event_category: 'chatbot',
+      event_action: 'chatbot_option_selected',
+      event_label: optionText,
+      chatbot_option_id: optionId,
+      chatbot_option_text: optionText,
+      chatbot_menu_depth: String(depth),
+    }, user);
+  },
+
+  /**
+   * Chatbot conversation path event
+   */
+  trackChatbotPath(path, user = null) {
+    return this.trackEvent({
+      tealium_event: 'chatbot_path',
+      event_category: 'chatbot',
+      event_action: 'chatbot_conversation_path',
+      event_label: path.join(' > '),
+      chatbot_path: path.join(' > '),
+      chatbot_path_depth: String(path.length),
+    }, user);
+  },
+
+  /**
+   * Chatbot restart event
+   */
+  trackChatbotRestart(user = null) {
+    return this.trackEvent({
+      tealium_event: 'chatbot_restart',
+      event_category: 'chatbot',
+      event_action: 'chatbot_restarted',
+      event_label: 'conversation_restart',
+    }, user);
+  },
 };
 
 export default DataLayer;
